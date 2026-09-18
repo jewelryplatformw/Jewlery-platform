@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #0d0d0e;
+  color: #e7e3da;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+[dir='rtl'] body,
+[dir='rtl'] .font-sans {
+  font-family: 'Noto Naskh Arabic', 'Inter', system-ui, sans-serif;
+}
+
+[dir='rtl'] .font-display {
+  font-family: 'Noto Naskh Arabic', 'Cinzel', serif;
+  letter-spacing: 0;
+}
+
+.font-display {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  letter-spacing: 0.02em;
+}
+
+.font-sans {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #161618;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2e;
+  border-radius: 999px;
+  border: 2px solid #161618;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3f;
+}
+
+/* Subtle gold glow utility */
+.gold-glow {
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.18), 0 18px 40px -18px rgba(212, 175, 55, 0.25);
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #f5d77a 0%, #d4af37 45%, #b8941f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.card-sheen {
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(212, 175, 55, 0.06) 0%, rgba(212, 175, 55, 0) 50%),
+    linear-gradient(180deg, #1a1a1d 0%, #161618 100%);
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2.4s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.35s ease-out both;
+}
+
+/* RTL-aware spacing helpers */
+[dir='rtl'] .rtl-flip-x {
+  transform: scaleX(-1);
+}

@@ -1,0 +1,252 @@
+import { useEffect, useMemo, useState } from 'react';
+import {
+  LineChart as LineChartIcon,
+  Wallet,
+  Gem,
+  Layers,
+  ScanLine,
+  Search,
+  Menu,
+  X,
+  Languages,
+} from 'lucide-react';
+import MetalAnalytics from '@/components/MetalAnalytics';
+import Finance from '@/components/Finance';
+import Inventory from '@/components/Inventory';
+import MetalStock from '@/components/MetalStock';
+import Scanner from '@/components/Scanner';
+import { supabase } from '@/lib/supabase';
+import type { JewelryItem, MetalStock as MetalStockType, Transaction } from '@/lib/types';
+import { LangContext, translations, type Lang } from '@/lib/i18n';
+
+type SectionId = 'metals' | 'finance' | 'inventory' | 'stock' | 'scanner';
+
+interface NavItem {
+  id: SectionId;
+  labelKey: keyof typeof translations.en;
+  descKey: keyof typeof translations.en;
+  icon: typeof LineChartIcon;
+}
+
+const NAV: NavItem[] = [
+  { id: 'metals', labelKey: 'navMetals', descKey: 'navMetalsDesc', icon: LineChartIcon },
+  { id: 'finance', labelKey: 'navFinance', descKey: 'navFinanceDesc', icon: Wallet },
+  { id: 'inventory', labelKey: 'navInventory', descKey: 'navInventoryDesc', icon: Gem },
+  { id: 'stock', labelKey: 'navStock', descKey: 'navStockDesc', icon: Layers },
+  { id: 'scanner', labelKey: 'navScanner', descKey: 'navScannerDesc', icon: ScanLine },
+];
+
+const LANG_KEY = 'glow-gallery-lang';
+
+function getInitialLang(): Lang {
+  try {
+    const stored = localStorage.getItem(LANG_KEY);
+    if (stored === 'ar' || stored === 'en') return stored;
+  } catch {
+    // localStorage unavailable (private mode, etc.) — fall back to default
+  }
+  return 'en';
+}
+
+function App() {
+  const [lang, setLangState] = useState<Lang>(getInitialLang);
+  const [active, setActive] = useState<SectionId>('metals');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  const [items, setItems] = useState<JewelryItem[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [metalStock, setMetalStock] = useState<MetalStockType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const dir = lang === 'ar' ? 'rtl' : 'ltr';
+  const t = translations[lang];
+
+  const loadData = async () => {
+    setLoading(true);
+    const [itemsRes, txRes, stockRes] = await Promise.all([
+      supabase.from('jewelry_items').select('*').order('created_at', { ascending: false }),
+      supabase.from('transactions').select('*').order('transaction_date', { ascending: false }),
+      supabase.from('metal_stock').select('*'),
+    ]);
+    if (itemsRes.data) setItems(itemsRes.data as JewelryItem[]);
+    if (txRes.data) setTransactions(txRes.data as Transaction[]);
+    if (stockRes.data) setMetalStock(stockRes.data as MetalStockType[]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    void loadData();
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dir = dir;
+    document.documentElement.lang = lang;
+  }, [dir, lang]);
+
+  const setLang = (next: Lang) => {
+    setLangState(next);
+    try {
+      localStorage.setItem(LANG_KEY, next);
+    } catch {
+      // ignore write failure in restricted environments
+    }
+  };
+
+  const activeItem = useMemo(() => NAV.find((n) => n.id === active) ?? NAV[0], [active]);
+
+  return (
+    <LangContext.Provider value={{ lang, setLang, t, dir }}>
+      <div className="min-h-screen bg-[#0d0d0e] text-[#e7e3da] flex">
+        {/* Sidebar */}
+        <aside
+          className={`fixed lg:sticky top-0 z-40 h-screen w-72 shrink-0 border-white/5 bg-[#0f0f11] transition-transform duration-300 ${
+            dir === 'rtl' ? 'border-l border-r-0' : 'border-r'
+          } ${
+            mobileNavOpen
+              ? 'translate-x-0'
+              : dir === 'rtl'
+                ? 'translate-x-full lg:translate-x-0'
+                : '-translate-x-full lg:translate-x-0'
+          }`}
+        >
+          <div className="flex h-full flex-col">
+            <div className="flex items-center justify-between px-6 py-6">
+              <div className="flex items-center gap-3">
+                <img src="/glow-gallery-mark.svg" alt="Glow Gallery" className="h-11 w-auto" />
+                <div>
+                  <p className="font-display text-lg leading-none gold-text">{t.brand}</p>
+                  <p className="text-[10px] uppercase tracking-[0.32em] text-white/40">{t.brandTagline}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setMobileNavOpen(false)}
+                className="lg:hidden text-white/50 hover:text-white"
+                aria-label={t.closeNav}
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <nav className="flex-1 space-y-1.5 px-3 py-2">
+              {NAV.map((item) => {
+                const Icon = item.icon;
+                const isActive = active === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActive(item.id);
+                      setMobileNavOpen(false);
+                    }}
+                    className={`group flex w-full items-center gap-3 rounded-xl px-3.5 py-3 transition-all ${
+                      dir === 'rtl' ? 'text-right' : 'text-left'
+                    } ${
+                      isActive
+                        ? 'bg-gradient-to-r from-[#d4af37]/15 to-transparent text-white'
+                        : 'text-white/55 hover:bg-white/5 hover:text-white/90'
+                    }`}
+                  >
+                    <span
+                      className={`grid h-9 w-9 place-items-center rounded-lg border transition-colors ${
+                        isActive
+                          ? 'border-[#d4af37]/40 bg-[#d4af37]/15 text-[#d4af37]'
+                          : 'border-white/5 bg-white/5 text-white/60 group-hover:text-white/90'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="text-sm font-medium leading-tight">{t[item.labelKey]}</span>
+                      <span className="text-[11px] text-white/35">{t[item.descKey]}</span>
+                    </span>
+                    {isActive && <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37] animate-pulse-soft ms-auto" />}
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="px-6 py-5 border-t border-white/5">
+              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+                <p className="text-[10px] uppercase tracking-[0.28em] text-[#d4af37]/80">{t.marketStatus}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse-soft" />
+                  <span className="text-sm text-white/80">{t.marketLive}</span>
+                </div>
+                <p className="mt-2 text-[11px] text-white/35">{t.marketNote}</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {mobileNavOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
+            onClick={() => setMobileNavOpen(false)}
+          />
+        )}
+
+        {/* Main */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="sticky top-0 z-20 border-b border-white/5 bg-[#0d0d0e]/80 backdrop-blur-xl">
+            <div className="flex items-center justify-between px-5 py-4 sm:px-8">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setMobileNavOpen(true)}
+                  className="lg:hidden text-white/60 hover:text-white"
+                  aria-label={t.openNav}
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+                <div>
+                  <h1 className="font-display text-xl text-white sm:text-2xl">{t[activeItem.labelKey]}</h1>
+                  <p className="text-xs text-white/40">{t[activeItem.descKey]}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="hidden items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] px-4 py-2 sm:flex">
+                  <Search className="h-4 w-4 text-white/40" />
+                  <input
+                    placeholder={t.searchPlaceholder}
+                    className="w-56 bg-transparent text-sm text-white/80 placeholder:text-white/30 focus:outline-none"
+                  />
+                  <kbd className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] text-white/40">⌘K</kbd>
+                </div>
+                <button
+                  onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+                  className="flex items-center gap-2 rounded-xl border border-[#d4af37]/30 bg-[#d4af37]/10 px-3.5 py-2 text-sm font-medium text-[#d4af37] transition-colors hover:bg-[#d4af37]/20"
+                  aria-label="Toggle language"
+                >
+                  <Languages className="h-4 w-4" />
+                  <span>{t.langToggle}</span>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-1 px-5 py-6 sm:px-8 sm:py-8">
+            {loading ? (
+              <div className="flex h-96 items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="h-10 w-10 rounded-full border-2 border-[#d4af37]/30 border-t-[#d4af37] animate-spin" />
+                  <p className="text-sm text-white/40">{t.loadingData}</p>
+                </div>
+              </div>
+            ) : (
+              <div key={active} className="animate-fade-in">
+                {active === 'metals' && <MetalAnalytics metalStock={metalStock} />}
+                {active === 'finance' && (
+                  <Finance transactions={transactions} items={items} onReload={loadData} />
+                )}
+                {active === 'inventory' && <Inventory items={items} onReload={loadData} />}
+                {active === 'stock' && <MetalStock metalStock={metalStock} />}
+                {active === 'scanner' && <Scanner items={items} />}
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+    </LangContext.Provider>
+  );
+}
+
+export default App;
