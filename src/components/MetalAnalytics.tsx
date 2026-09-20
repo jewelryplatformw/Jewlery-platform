@@ -215,6 +215,7 @@ export default function MetalAnalytics({ metalStock }: Props) {
           <div className="text-2xl font-bold text-white mt-1">{silver24k.toFixed(2)} د.ت</div>
         </div>
       </div>
+      
       {/* Purity toggle */}
       <div className="flex items-center justify-center gap-2">
         <span className="text-xs text-white/40">{t.purityLabel}</span>
