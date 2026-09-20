@@ -16,7 +16,7 @@ import { formatCurrencyPrecise, formatNumber } from '@/lib/format';
 import { useLang } from '@/lib/i18n';
 
 interface Props {
-  metalStock: MetalStock[];
+  metalStock?: MetalStock[];
 }
 
 type Timeframe = '1H' | '1D' | '1W' | '1M' | '1Y';
@@ -187,11 +187,13 @@ function Stat({ label, value, icon, tone }: { label: string; value: string; icon
   );
 }
 
-export default function MetalAnalytics({ metalStock }: Props) {
+export default function MetalAnalytics({ metalStock = [] }: Props) {
   const { t } = useLang();
   const [purity, setPurity] = useState<Purity>('24K');
-  const gold = metalStock.find((m) => m.metal === 'gold');
-  const silver = metalStock.find((m) => m.metal === 'silver');
+  
+  const stockArray = Array.isArray(metalStock) ? metalStock : [];
+  const gold = stockArray.find((m) => m.metal === 'gold');
+  const silver = stockArray.find((m) => m.metal === 'silver');
 
   const gold24k = gold?.spot_price ?? 412.00;
   const silver24k = silver?.spot_price ?? 4.50;
@@ -201,17 +203,18 @@ export default function MetalAnalytics({ metalStock }: Props) {
 
   return (
     <div className="space-y-6">
+      {/* بطاقات أسعار الذهب والفضة المباشرة */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
-          <div className="text-amber-400 text-sm">ذهب عيار 24</div>
+          <div className="text-amber-400 text-sm font-medium">ذهب عيار 24</div>
           <div className="text-2xl font-bold text-white mt-1">{gold24k.toFixed(2)} د.ت</div>
         </div>
         <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
-          <div className="text-amber-300 text-sm">ذهب عيار 18</div>
+          <div className="text-amber-300 text-sm font-medium">ذهب عيار 18</div>
           <div className="text-2xl font-bold text-white mt-1">{gold18k.toFixed(2)} د.ت</div>
         </div>
         <div className="p-4 rounded-xl border border-slate-400/20 bg-slate-400/5">
-          <div className="text-slate-300 text-sm">فضة نقية</div>
+          <div className="text-slate-300 text-sm font-medium">فضة نقية</div>
           <div className="text-2xl font-bold text-white mt-1">{silver24k.toFixed(2)} د.ت</div>
         </div>
       </div>
@@ -239,9 +242,10 @@ export default function MetalAnalytics({ metalStock }: Props) {
         )}
       </div>
 
+      {/* الرسوم البيانية - تظهر دائماً */}
       <div className="grid gap-6 xl:grid-cols-2">
-        {gold && <MetalCard metal="gold" label={t.goldLabel} spot24k={gold24k} accent="#d4af37" seed={42} purity={purity} />}
-        {silver && <MetalCard metal="silver" label={t.silverLabel} spot24k={silver24k} accent="#94a3b8" seed={88} purity={purity} />}
+        <MetalCard metal="gold" label={t.goldLabel} spot24k={gold24k} accent="#d4af37" seed={42} purity={purity} />
+        <MetalCard metal="silver" label={t.silverLabel} spot24k={silver24k} accent="#94a3b8" seed={88} purity={purity} />
       </div>
 
       <div className="card-sheen rounded-2xl border border-white/5 p-5 sm:p-6">
