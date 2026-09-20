@@ -46,7 +46,7 @@ function getInitialLang(): Lang {
     const stored = localStorage.getItem(LANG_KEY);
     if (stored === 'ar' || stored === 'en') return stored;
   } catch {
-    // localStorage unavailable (private mode, etc.) — fall back to default
+    // localStorage unavailable
   }
   return 'en';
 }
@@ -66,15 +66,20 @@ function App() {
 
   const loadData = async () => {
     setLoading(true);
-    const [itemsRes, txRes, stockRes] = await Promise.all([
-      supabase.from('jewelry_items').select('*').order('created_at', { ascending: false }),
-      supabase.from('transactions').select('*').order('transaction_date', { ascending: false }),
-      supabase.from('metal_stock').select('*'),
-    ]);
-    if (itemsRes.data) setItems(itemsRes.data as JewelryItem[]);
-    if (txRes.data) setTransactions(txRes.data as Transaction[]);
-    if (stockRes.data) setMetalStock(stockRes.data as MetalStockType[]);
-    setLoading(false);
+    try {
+      const [itemsRes, txRes, stockRes] = await Promise.all([
+        supabase.from('jewelry_items').select('*').order('created_at', { ascending: false }),
+        supabase.from('transactions').select('*').order('transaction_date', { ascending: false }),
+        supabase.from('metal_stock').select('*'),
+      ]);
+      if (itemsRes.data) setItems(itemsRes.data as JewelryItem[]);
+      if (txRes.data) setTransactions(txRes.data as Transaction[]);
+      if (stockRes.data) setMetalStock(stockRes.data as MetalStockType[]);
+    } catch (err) {
+      console.error('Error fetching data from Supabase:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -93,7 +98,7 @@ function App() {
     try {
       localStorage.setItem(LANG_KEY, next);
     } catch {
-      // ignore write failure in restricted environments
+      // ignore write failure
     }
   };
 
@@ -181,7 +186,7 @@ function App() {
             </nav>
 
             <div className="px-6 py-5 border-t border-white/5">
-              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+              <div className="rounded-xl border border-white/5 bg-[#0d0d0e] p-4">
                 <p className="text-[10px] uppercase tracking-[0.28em] text-[#d4af37]/80">{t.marketStatus}</p>
                 <div className="mt-2 flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse-soft" />
