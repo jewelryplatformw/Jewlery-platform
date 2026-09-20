@@ -201,6 +201,21 @@ export default function MetalAnalytics({ metalStock }: Props) {
 
   return (
     <div className="space-y-6">
+            {/* بطاقات أسعار الذهب والفضة */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
+          <div className="text-amber-400 text-sm">ذهب عيار 24</div>
+          <div className="text-2xl font-bold text-white mt-1">{gold24k.toFixed(2)} د.ت</div>
+        </div>
+        <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
+          <div className="text-amber-300 text-sm">ذهب عيار 18</div>
+          <div className="text-2xl font-bold text-white mt-1">{gold18k.toFixed(2)} د.ت</div>
+        </div>
+        <div className="p-4 rounded-xl border border-slate-400/20 bg-slate-400/5">
+          <div className="text-slate-300 text-sm">فضة نقية</div>
+          <div className="text-2xl font-bold text-white mt-1">{silver24k.toFixed(2)} د.ت</div>
+        </div>
+      </div>
       {/* Purity toggle */}
       <div className="flex items-center justify-center gap-2">
         <span className="text-xs text-white/40">{t.purityLabel}</span>
