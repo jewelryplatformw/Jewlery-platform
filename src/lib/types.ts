@@ -16,14 +16,15 @@ export interface JewelryItem {
   created_at: string;
 }
 
-export type TransactionKind = 'income' | 'expense';
+export type TransactionKind = 'sale' | 'purchase' | 'expense';
 
 export interface Transaction {
   id: string;
+  transaction_code: string;
+  transaction_date: string;
   description: string;
   kind: TransactionKind;
   amount: number;
-  date: string;
   created_at: string;
 }
 
