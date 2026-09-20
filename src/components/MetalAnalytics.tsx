@@ -201,7 +201,6 @@ export default function MetalAnalytics({ metalStock }: Props) {
 
   return (
     <div className="space-y-6">
-            {/* بطاقات أسعار الذهب والفضة */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
           <div className="text-amber-400 text-sm">ذهب عيار 24</div>
