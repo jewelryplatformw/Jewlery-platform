@@ -5,6 +5,7 @@ import {
   Gem,
   Layers,
   ScanLine,
+  Receipt,
   Search,
   Menu,
   X,
@@ -15,11 +16,12 @@ import Finance from '@/components/Finance';
 import Inventory from '@/components/Inventory';
 import MetalStock from '@/components/MetalStock';
 import Scanner from '@/components/Scanner';
+import InvoiceGenerator from '@/components/InvoiceGenerator';
 import { supabase } from '@/lib/supabase';
 import type { JewelryItem, MetalStock as MetalStockType, Transaction } from '@/lib/types';
 import { LangContext, translations, type Lang } from '@/lib/i18n';
 
-type SectionId = 'metals' | 'finance' | 'inventory' | 'stock' | 'scanner';
+type SectionId = 'metals' | 'finance' | 'inventory' | 'stock' | 'scanner' | 'invoice';
 
 interface NavItem {
   id: SectionId;
@@ -34,6 +36,7 @@ const NAV: NavItem[] = [
   { id: 'inventory', labelKey: 'navInventory', descKey: 'navInventoryDesc', icon: Gem },
   { id: 'stock', labelKey: 'navStock', descKey: 'navStockDesc', icon: Layers },
   { id: 'scanner', labelKey: 'navScanner', descKey: 'navScannerDesc', icon: ScanLine },
+  { id: 'invoice', labelKey: 'navInvoice', descKey: 'navInvoiceDesc', icon: Receipt },
 ];
 
 const LANG_KEY = 'glow-gallery-lang';
@@ -83,6 +86,8 @@ function App() {
     document.documentElement.lang = lang;
   }, [dir, lang]);
 
+  const closeMobileNav = () => setMobileNavOpen(false);
+
   const setLang = (next: Lang) => {
     setLangState(next);
     try {
@@ -99,8 +104,8 @@ function App() {
       <div className="min-h-screen bg-[#0d0d0e] text-[#e7e3da] flex">
         {/* Sidebar */}
         <aside
-          className={`fixed lg:sticky top-0 z-40 h-screen w-72 shrink-0 border-white/5 bg-[#0f0f11] transition-transform duration-300 ${
-            dir === 'rtl' ? 'border-l border-r-0' : 'border-r'
+          className={`fixed inset-y-0 z-40 h-screen w-72 shrink-0 border-white/5 bg-[#0f0f11] transition-transform duration-300 ${
+            dir === 'rtl' ? 'right-0 border-l border-r-0' : 'left-0 border-r'
           } ${
             mobileNavOpen
               ? 'translate-x-0'
@@ -119,8 +124,18 @@ function App() {
                 </div>
               </div>
               <button
-                onClick={() => setMobileNavOpen(false)}
-                className="lg:hidden text-white/50 hover:text-white"
+                type="button"
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                  closeMobileNav();
+                }}
+                onTouchEnd={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  closeMobileNav();
+                }}
+                onClick={closeMobileNav}
+                className="relative z-50 grid h-10 w-10 shrink-0 place-items-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
                 aria-label={t.closeNav}
               >
                 <X className="h-5 w-5" />
@@ -136,7 +151,7 @@ function App() {
                     key={item.id}
                     onClick={() => {
                       setActive(item.id);
-                      setMobileNavOpen(false);
+                      closeMobileNav();
                     }}
                     className={`group flex w-full items-center gap-3 rounded-xl px-3.5 py-3 transition-all ${
                       dir === 'rtl' ? 'text-right' : 'text-left'
@@ -181,7 +196,7 @@ function App() {
         {mobileNavOpen && (
           <div
             className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
-            onClick={() => setMobileNavOpen(false)}
+            onClick={closeMobileNav}
           />
         )}
 
@@ -240,6 +255,7 @@ function App() {
                 {active === 'inventory' && <Inventory items={items} onReload={loadData} />}
                 {active === 'stock' && <MetalStock metalStock={metalStock} />}
                 {active === 'scanner' && <Scanner items={items} />}
+                {active === 'invoice' && <InvoiceGenerator metalStock={metalStock} />}
               </div>
             )}
           </main>

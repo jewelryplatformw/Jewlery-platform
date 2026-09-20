@@ -20,8 +20,12 @@ interface Props {
 }
 
 type Timeframe = '1H' | '1D' | '1W' | '1M' | '1Y';
+type Purity = '24K' | '18K';
 
 const TIMEFRAMES: Timeframe[] = ['1H', '1D', '1W', '1M', '1Y'];
+
+const TROY_OZ_TO_G = 31.1035;
+const USD_TO_TND = 3.11;
 
 function generateSeries(base: number, points: number, volatility: number, seed: number) {
   const data: { time: string; price: number }[] = [];
@@ -39,18 +43,24 @@ function generateSeries(base: number, points: number, volatility: number, seed: 
 function MetalCard({
   metal,
   label,
-  spot,
+  spot24k,
   accent,
   seed,
+  purity,
 }: {
   metal: 'gold' | 'silver';
   label: string;
-  spot: number;
+  spot24k: number;
   accent: string;
   seed: number;
+  purity: Purity;
 }) {
   const { t } = useLang();
   const [timeframe, setTimeframe] = useState<Timeframe>('1D');
+
+  const purityFactor = metal === 'gold' && purity === '18K' ? 18 / 24 : 1;
+  const spot = spot24k * purityFactor;
+
   const [series, setSeries] = useState(() => generateSeries(spot, 48, spot * 0.012, seed));
 
   useEffect(() => {
@@ -84,8 +94,13 @@ function MetalCard({
             </span>
           </div>
           <div>
-            <p className="text-sm text-white/50">{label} {t.spotPrice}</p>
+            <p className="text-sm text-white/50">
+              {label} {t.spotPrice} · {metal === 'gold' ? purity : '24K'}
+            </p>
             <p className="font-display text-2xl text-white">{formatCurrencyPrecise(spot)}</p>
+            <p className="text-[10px] text-white/30">
+              {t.conversionNote}: 1 oz = {TROY_OZ_TO_G}g · 1 USD = {USD_TO_TND} {t.tnd}
+            </p>
             <div className={`mt-1 flex items-center gap-1 text-xs ${isUp ? 'text-emerald-400' : 'text-rose-400'}`}>
               {isUp ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}
               <span>
@@ -116,7 +131,7 @@ function MetalCard({
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={series} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient id={`grad-${metal}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={`grad-${metal}-${purity}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={accent} stopOpacity={0.35} />
                 <stop offset="100%" stopColor={accent} stopOpacity={0} />
               </linearGradient>
@@ -127,7 +142,7 @@ function MetalCard({
               tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }}
               axisLine={false}
               tickLine={false}
-              domain={['dataMin - 5', 'dataMax + 5']}
+              domain={['dataMin - 2', 'dataMax + 2']}
               tickFormatter={(v) => formatNumber(Number(v), 0)}
             />
             <Tooltip
@@ -139,9 +154,9 @@ function MetalCard({
                 color: '#e7e3da',
               }}
               labelStyle={{ color: 'rgba(255,255,255,0.4)' }}
-              formatter={(v: number) => [formatCurrencyPrecise(v), t.spotPrice]}
+              formatter={(v: number) => [formatCurrencyPrecise(v), `${t.spotPrice} · ${metal === 'gold' ? purity : '24K'}`]}
             />
-            <Area type="monotone" dataKey="price" stroke={accent} strokeWidth={2} fill={`url(#grad-${metal})`} />
+            <Area type="monotone" dataKey="price" stroke={accent} strokeWidth={2} fill={`url(#grad-${metal}-${purity})`} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -174,14 +189,44 @@ function Stat({ label, value, icon, tone }: { label: string; value: string; icon
 
 export default function MetalAnalytics({ metalStock }: Props) {
   const { t } = useLang();
+  const [purity, setPurity] = useState<Purity>('24K');
   const gold = metalStock.find((m) => m.metal === 'gold');
   const silver = metalStock.find((m) => m.metal === 'silver');
 
+  const gold24k = gold?.spot_price ?? 412.00;
+  const silver24k = silver?.spot_price ?? 4.50;
+  const gold18k = gold24k * (18 / 24);
+
+  const ratio = silver24k > 0 ? gold24k / silver24k : 0;
+
   return (
     <div className="space-y-6">
+      {/* Purity toggle */}
+      <div className="flex items-center justify-center gap-2">
+        <span className="text-xs text-white/40">{t.purityLabel}</span>
+        <div className="flex gap-1 rounded-lg border border-white/5 bg-black/30 p-1">
+          {(['24K', '18K'] as Purity[]).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPurity(p)}
+              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                purity === p ? 'bg-[#d4af37]/20 text-[#d4af37]' : 'text-white/40 hover:text-white/70'
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+        {purity === '18K' && (
+          <span className="text-xs text-white/30">
+            24K: {formatCurrencyPrecise(gold24k)} → 18K: {formatCurrencyPrecise(gold18k)}
+          </span>
+        )}
+      </div>
+
       <div className="grid gap-6 xl:grid-cols-2">
-        {gold && <MetalCard metal="gold" label={t.goldLabel} spot={gold.spot_price} accent="#d4af37" seed={42} />}
-        {silver && <MetalCard metal="silver" label={t.silverLabel} spot={silver.spot_price} accent="#94a3b8" seed={88} />}
+        {gold && <MetalCard metal="gold" label={t.goldLabel} spot24k={gold24k} accent="#d4af37" seed={42} purity={purity} />}
+        {silver && <MetalCard metal="silver" label={t.silverLabel} spot24k={silver24k} accent="#94a3b8" seed={88} purity={purity} />}
       </div>
 
       <div className="card-sheen rounded-2xl border border-white/5 p-5 sm:p-6">
@@ -196,10 +241,10 @@ export default function MetalAnalytics({ metalStock }: Props) {
         </div>
         <div className="mt-4 h-48">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={generateSeries(78, 40, 2.5, 7)} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            <LineChart data={generateSeries(ratio, 40, ratio * 0.03, 7)} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
               <XAxis dataKey="time" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} domain={[70, 86]} />
+              <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} domain={['dataMin - 2', 'dataMax + 2']} />
               <Tooltip
                 contentStyle={{
                   background: '#161618',
@@ -208,6 +253,7 @@ export default function MetalAnalytics({ metalStock }: Props) {
                   fontSize: 12,
                   color: '#e7e3da',
                 }}
+                formatter={(v: number) => [formatNumber(v, 1), t.ratio]}
               />
               <Line type="monotone" dataKey="price" stroke="#d4af37" strokeWidth={2} dot={false} />
             </LineChart>

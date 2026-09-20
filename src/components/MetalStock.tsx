@@ -136,8 +136,8 @@ function MetalSummary({
       <p className="mt-3 font-display text-3xl text-white">{formatNumber(weight, 2)} {t.kg}</p>
       <div className="mt-3 space-y-1.5 border-t border-white/5 pt-3 text-xs">
         <div className="flex justify-between text-white/50">
-          <span>{t.spotPricePerOz}</span>
-          <span className="text-white/80">{formatCurrencyPrecise(spot)}/oz</span>
+          <span>{t.spotPricePerGram}</span>
+          <span className="text-white/80">{formatCurrencyPrecise(spot)}/g</span>
         </div>
         <div className="flex justify-between text-white/50">
           <span>{t.liveValuationLabel}</span>

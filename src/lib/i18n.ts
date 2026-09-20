@@ -40,6 +40,8 @@ export interface Dict {
   live: string;
   goldLabel: string;
   silverLabel: string;
+  purityLabel: string;
+  conversionNote: string;
 
   // Finance
   totalRevenue: string;
@@ -68,6 +70,10 @@ export interface Dict {
   purchase: string;
   expenseKind: string;
   enterValid: string;
+  incomeKind: string;
+  txDateLabel: string;
+  deleteTransaction: string;
+  confirmDeleteTx: string;
 
   // Inventory
   searchNameSku: string;
@@ -93,13 +99,29 @@ export interface Dict {
   viewHistory: string;
   ct: string;
   pcs: string;
+  addItemBtn: string;
+  itemName: string;
+  itemNamePlaceholder: string;
+  itemCategory: string;
+  itemMetal: string;
+  itemCaratWeight: string;
+  itemClarity: string;
+  itemColor: string;
+  itemTotalWeight: string;
+  itemStockQty: string;
+  itemPrice: string;
+  itemImage: string;
+  itemImagePlaceholder: string;
+  saveItem: string;
+  deleteItem: string;
+  noItems: string;
 
   // Metal Stock
   totalReserveValue: string;
   liveValuation: string;
   physicalGold: string;
   physicalSilver: string;
-  spotPricePerOz: string;
+  spotPricePerGram: string;
   liveValuationLabel: string;
   metalConsumption: string;
   consumptionDesc: string;
@@ -107,6 +129,13 @@ export interface Dict {
   silverGram: string;
   consumed: string;
   kg: string;
+  editGoldStock: string;
+  editSilverStock: string;
+  stockWeightKg: string;
+  stockWeightGrams: string;
+  saveStock: string;
+  editSpotPrice: string;
+  spotPriceLabel: string;
 
   // Scanner
   qrScanner: string;
@@ -128,6 +157,56 @@ export interface Dict {
   clarity: string;
   color: string;
   vaultLocation: string;
+
+  // Invoice
+  navInvoice: string;
+  navInvoiceDesc: string;
+  invoiceTitle: string;
+  invoiceSubtitle: string;
+  customerInfo: string;
+  customerName: string;
+  customerNamePlaceholder: string;
+  customerPhone: string;
+  customerPhonePlaceholder: string;
+  invoiceDate: string;
+  servicesList: string;
+  servicesDesc: string;
+  addCustomItem: string;
+  customItemName: string;
+  customItemPrice: string;
+  addItem: string;
+  noItemsSelected: string;
+  colService: string;
+  colQty: string;
+  colPrice: string;
+  colTotal: string;
+  removeItem: string;
+  summary: string;
+  subtotal: string;
+  discount: string;
+  discountPlaceholder: string;
+  totalAmount: string;
+  printInvoice: string;
+  resetInvoice: string;
+  invoiceId: string;
+  invoiceThankYou: string;
+  invoicePhone: string;
+  invoiceAddress: string;
+  variablePrice: string;
+  tnd: string;
+  qty: string;
+  price: string;
+  print: string;
+  scanToVerify: string;
+  mizanTitle: string;
+  mizanGold: string;
+  mizanSilver: string;
+  mizanWeight: string;
+  mizanRate: string;
+  mizanRateHint: string;
+  mizanCalc: string;
+  mizanAdd: string;
+  mizanGram: string;
 }
 
 export const translations: Record<Lang, Dict> = {
@@ -166,6 +245,8 @@ export const translations: Record<Lang, Dict> = {
     live: 'Live',
     goldLabel: 'Gold (XAU)',
     silverLabel: 'Silver (XAG)',
+    purityLabel: 'Purity',
+    conversionNote: 'Conversion',
 
     totalRevenue: 'Total Revenue',
     moneyIn: 'Money In',
@@ -186,13 +267,17 @@ export const translations: Record<Lang, Dict> = {
     txAmount: 'Amount',
     noTransactions: 'No transactions yet.',
     descPlaceholder: 'Description',
-    amountPlaceholder: 'Amount ($)',
+    amountPlaceholder: 'Amount (TND)',
     saveTransaction: 'Save Transaction',
     saving: 'Saving…',
     sale: 'Sale',
     purchase: 'Purchase',
     expenseKind: 'Expense',
     enterValid: 'Enter a description and a positive amount.',
+    incomeKind: 'Income',
+    txDateLabel: 'Date',
+    deleteTransaction: 'Delete',
+    confirmDeleteTx: 'Delete this transaction?',
 
     searchNameSku: 'Search name or SKU…',
     filters: 'Filters:',
@@ -217,12 +302,28 @@ export const translations: Record<Lang, Dict> = {
     viewHistory: 'View History',
     ct: 'ct',
     pcs: 'pcs',
+    addItemBtn: 'Add Jewelry Item',
+    itemName: 'Item Name',
+    itemNamePlaceholder: 'Enter item name…',
+    itemCategory: 'Category',
+    itemMetal: 'Metal Type',
+    itemCaratWeight: 'Carat Weight',
+    itemClarity: 'Clarity',
+    itemColor: 'Color',
+    itemTotalWeight: 'Total Weight (g)',
+    itemStockQty: 'Stock Quantity',
+    itemPrice: 'Price (TND)',
+    itemImage: 'Image URL',
+    itemImagePlaceholder: 'https://…',
+    saveItem: 'Save Item',
+    deleteItem: 'Delete',
+    noItems: 'No jewelry items yet. Add your first piece.'
 
     totalReserveValue: 'Total Reserve Value',
     liveValuation: 'Live valuation at spot',
     physicalGold: 'Physical Gold',
     physicalSilver: 'Physical Silver',
-    spotPricePerOz: 'Spot price',
+    spotPricePerGram: 'Spot price per gram',
     liveValuationLabel: 'Live valuation',
     metalConsumption: 'Metal Consumption · Production',
     consumptionDesc: 'Weekly raw metal used for manufacturing',
@@ -230,6 +331,13 @@ export const translations: Record<Lang, Dict> = {
     silverGram: 'Silver (g)',
     consumed: 'Consumed',
     kg: 'kg',
+    editGoldStock: 'Edit Gold Stock',
+    editSilverStock: 'Edit Silver Stock',
+    stockWeightKg: 'Weight (kg)',
+    stockWeightGrams: 'or weight (grams)',
+    saveStock: 'Save',
+    editSpotPrice: 'Edit Spot Price',
+    spotPriceLabel: 'Spot Price /g (TND)',
 
     qrScanner: 'QR / SKU Scanner',
     scanOrManual: 'Scan a code or enter it manually',
@@ -250,6 +358,55 @@ export const translations: Record<Lang, Dict> = {
     clarity: 'Clarity',
     color: 'Color',
     vaultLocation: 'Vault A · Shelf 3',
+
+    navInvoice: 'Invoice Generation',
+    navInvoiceDesc: 'Create & print invoices',
+    invoiceTitle: 'Invoice Builder',
+    invoiceSubtitle: 'Create and print client invoices',
+    customerInfo: 'Customer Information',
+    customerName: 'Customer Name',
+    customerNamePlaceholder: 'Enter customer name…',
+    customerPhone: 'Phone Number',
+    customerPhonePlaceholder: 'Enter phone number…',
+    invoiceDate: 'Date & Time',
+    servicesList: 'Services & Items',
+    servicesDesc: 'Select from preset services or add custom items',
+    addCustomItem: 'Add Custom Item',
+    customItemName: 'Item / Service name',
+    customItemPrice: 'Price (TND)',
+    addItem: 'Add',
+    noItemsSelected: 'No items added yet. Select a service above or add a custom item.',
+    colService: 'Service / Item',
+    colQty: 'Qty',
+    colPrice: 'Price',
+    colTotal: 'Total',
+    removeItem: 'Remove',
+    summary: 'Summary',
+    subtotal: 'Subtotal',
+    discount: 'Discount / Tax',
+    discountPlaceholder: '0',
+    totalAmount: 'Total Amount',
+    printInvoice: 'Print Invoice',
+    resetInvoice: 'Reset',
+    invoiceId: 'Invoice #',
+    invoiceThankYou: 'Thank you for your business!',
+    invoicePhone: 'Tel',
+    invoiceAddress: 'Tunis, Tunisia',
+    variablePrice: 'Variable',
+    tnd: 'TND',
+    qty: 'Qty',
+    price: 'Price',
+    print: 'Print',
+    scanToVerify: 'Scan to verify invoice',
+    mizanTitle: 'الميزان (Contre-poids)',
+    mizanGold: 'ميزان ذهب (Gold)',
+    mizanSilver: 'ميزان فضة (Silver)',
+    mizanWeight: 'Weight (g)',
+    mizanRate: 'Rate /g',
+    mizanRateHint: 'Auto-filled from live metal rates',
+    mizanCalc: 'Calculated total',
+    mizanAdd: 'Add to invoice',
+    mizanGram: 'g',
   },
 
   ar: {
@@ -287,6 +444,8 @@ export const translations: Record<Lang, Dict> = {
     live: 'مباشر',
     goldLabel: 'الذهب (XAU)',
     silverLabel: 'الفضة (XAG)',
+    purityLabel: 'العيارة',
+    conversionNote: 'التحويل',
 
     totalRevenue: 'إجمالي الإيرادات',
     moneyIn: 'دخل نقدي',
@@ -307,13 +466,17 @@ export const translations: Record<Lang, Dict> = {
     txAmount: 'المبلغ',
     noTransactions: 'لا توجد معاملات بعد.',
     descPlaceholder: 'الوصف',
-    amountPlaceholder: 'المبلغ ($)',
+    amountPlaceholder: 'المبلغ (د.ت)',
     saveTransaction: 'حفظ المعاملة',
     saving: 'جارٍ الحفظ…',
     sale: 'بيع',
     purchase: 'شراء',
     expenseKind: 'مصروف',
     enterValid: 'أدخل وصفًا ومبلغًا موجبًا.',
+    incomeKind: 'إيرادات',
+    txDateLabel: 'التاريخ',
+    deleteTransaction: 'حذف',
+    confirmDeleteTx: 'حذف هذه المعاملة؟',
 
     searchNameSku: 'ابحث بالاسم أو رمز المنتج…',
     filters: 'تصفية:',
@@ -338,12 +501,28 @@ export const translations: Record<Lang, Dict> = {
     viewHistory: 'عرض السجل',
     ct: 'قيراط',
     pcs: 'قطعة',
+    addItemBtn: 'إضافة قطعة مجوهرات',
+    itemName: 'اسم القطعة',
+    itemNamePlaceholder: 'أدخل اسم القطعة…',
+    itemCategory: 'الفئة',
+    itemMetal: 'نوع المعدن',
+    itemCaratWeight: 'وزن القيراط',
+    itemClarity: 'النقاء',
+    itemColor: 'اللون',
+    itemTotalWeight: 'الوزن الإجمالي (جم)',
+    itemStockQty: 'كمية المخزون',
+    itemPrice: 'السعر (د.ت)',
+    itemImage: 'رابط الصورة',
+    itemImagePlaceholder: 'https://…',
+    saveItem: 'حفظ القطعة',
+    deleteItem: 'حذف',
+    noItems: 'لا توجد قطع مجوهرات بعد. أضف قطعتك الأولى.'
 
     totalReserveValue: 'إجمالي قيمة الاحتياطي',
     liveValuation: 'تقييم مباشر بالسعر الفوري',
     physicalGold: 'الذهب الفعلي',
     physicalSilver: 'الفضة الفعلية',
-    spotPricePerOz: 'السعر الفوري',
+    spotPricePerGram: 'السعر الفوري للغرام',
     liveValuationLabel: 'التقييم المباشر',
     metalConsumption: 'استهلاك المعادن · الإنتاج',
     consumptionDesc: 'المعدن الخام الأسبوعي المستخدم في التصنيع',
@@ -351,6 +530,13 @@ export const translations: Record<Lang, Dict> = {
     silverGram: 'الفضة (جم)',
     consumed: 'مستهلك',
     kg: 'كجم',
+    editGoldStock: 'تعديل رصيد الذهب الخام',
+    editSilverStock: 'تعديل رصيد الفضة الخام',
+    stockWeightKg: 'الوزن (كجم)',
+    stockWeightGrams: 'أو الوزن (جرام)',
+    saveStock: 'حفظ',
+    editSpotPrice: 'تعديل السعر الفوري',
+    spotPriceLabel: 'السعر الفوري/جم (د.ت)',
 
     qrScanner: 'ماسح رمز المنتج',
     scanOrManual: 'امسح الرمز أو أدخله يدويًا',
@@ -371,6 +557,55 @@ export const translations: Record<Lang, Dict> = {
     clarity: 'النقاء',
     color: 'اللون',
     vaultLocation: 'الخزنة أ · رف ٣',
+
+    navInvoice: 'استخراج الفواتير',
+    navInvoiceDesc: 'إنشاء وطباعة الفواتير',
+    invoiceTitle: 'منشئ الفواتير',
+    invoiceSubtitle: 'إنشاء وطباعة فواتير العملاء',
+    customerInfo: 'معلومات العميل',
+    customerName: 'اسم العميل',
+    customerNamePlaceholder: 'أدخل اسم العميل…',
+    customerPhone: 'رقم الهاتف',
+    customerPhonePlaceholder: 'أدخل رقم الهاتف…',
+    invoiceDate: 'التاريخ والوقت',
+    servicesList: 'الخدمات والمواد',
+    servicesDesc: 'اختر من الخدمات الجاهزة أو أضف مواد مخصصة',
+    addCustomItem: 'إضافة مادة مخصصة',
+    customItemName: 'اسم المادة / الخدمة',
+    customItemPrice: 'السعر (د.ت)',
+    addItem: 'إضافة',
+    noItemsSelected: 'لم تتم إضافة أي مواد بعد. اختر خدمة بالأعلى أو أضف مادة مخصصة.',
+    colService: 'الخدمة / المادة',
+    colQty: 'الكمية',
+    colPrice: 'السعر',
+    colTotal: 'المجموع',
+    removeItem: 'حذف',
+    summary: 'الملخص',
+    subtotal: 'المجموع الفرعي',
+    discount: 'تخفيض / ضريبة',
+    discountPlaceholder: '0',
+    totalAmount: 'المجموع الجملي',
+    printInvoice: 'طباعة الفاتورة',
+    resetInvoice: 'إعادة تعيين',
+    invoiceId: 'فاتورة رقم',
+    invoiceThankYou: 'شكرًا لتعاملكم معنا!',
+    invoicePhone: 'الهاتف',
+    invoiceAddress: 'تونس، تونس',
+    variablePrice: 'متغير',
+    tnd: 'د.ت',
+    qty: 'الكمية',
+    price: 'السعر',
+    print: 'طباعة',
+    scanToVerify: 'امسح للتحقق من الفاتورة',
+    mizanTitle: 'الميزان (Contre-poids)',
+    mizanGold: 'ميزان ذهب (الذهب)',
+    mizanSilver: 'ميزان فضة (الفضة)',
+    mizanWeight: 'الوزن (جم)',
+    mizanRate: 'السعر/جم',
+    mizanRateHint: 'تعبئة تلقائية من الأسعار المباشرة',
+    mizanCalc: 'المجموع المحسوب',
+    mizanAdd: 'إضافة للفاتورة',
+    mizanGram: 'جم',
   },
 };
 

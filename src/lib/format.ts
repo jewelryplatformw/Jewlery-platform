@@ -1,26 +1,22 @@
+const TND_SUFFIX = 'د.ت';
+
 export const formatCurrency = (value: number): string => {
   if (value >= 1000000) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return `${new Intl.NumberFormat('en-US', {
       notation: 'compact',
       maximumFractionDigits: 1,
-    }).format(value);
+    }).format(value)} ${TND_SUFFIX}`;
   }
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return `${new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 0,
-  }).format(value);
+  }).format(value)} ${TND_SUFFIX}`;
 };
 
 export const formatCurrencyPrecise = (value: number): string =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  `${new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value);
+  }).format(value)} ${TND_SUFFIX}`;
 
 export const formatNumber = (value: number, fractionDigits = 0): string =>
   new Intl.NumberFormat('en-US', {
