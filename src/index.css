@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #0d0d0e;
+  color: #e7e3da;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+[dir='rtl'] body,
+[dir='rtl'] .font-sans {
+  font-family: 'Noto Naskh Arabic', 'Inter', system-ui, sans-serif;
+}
+
+[dir='rtl'] .font-display {
+  font-family: 'Noto Naskh Arabic', 'Cinzel', serif;
+  letter-spacing: 0;
+}
+
+.font-display {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  letter-spacing: 0.02em;
+}
+
+.font-sans {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #161618;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2e;
+  border-radius: 999px;
+  border: 2px solid #161618;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3f;
+}
+
+/* Subtle gold glow utility */
+.gold-glow {
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.18), 0 18px 40px -18px rgba(212, 175, 55, 0.25);
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #f5d77a 0%, #d4af37 45%, #b8941f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.card-sheen {
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(212, 175, 55, 0.06) 0%, rgba(212, 175, 55, 0) 50%),
+    linear-gradient(180deg, #1a1a1d 0%, #161618 100%);
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2.4s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.35s ease-out both;
+}
+
+/* RTL-aware spacing helpers */
+[dir='rtl'] .rtl-flip-x {
+  transform: scaleX(-1);
+}
+
+/* ─── Print: Invoice A4 layout ─── */
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+  }
+
+  /* Hide everything except the printable invoice */
+  body * {
+    visibility: hidden;
+  }
+  #printable-invoice,
+  #printable-invoice * {
+    visibility: visible;
+  }
+  #printable-invoice {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+
+  .invoice-page {
+    font-family: 'Inter', 'Noto Naskh Arabic', system-ui, sans-serif;
+    color: #1a1a1a;
+    background: #ffffff;
+    padding: 0;
+  }
+
+  .invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6mm;
+  }
+
+  .invoice-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .invoice-logo {
+    height: 48px;
+    width: auto;
+  }
+
+  .invoice-brand-name {
+    font-family: 'Cinzel', 'Noto Naskh Arabic', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  .invoice-brand-sub {
+    font-size: 11px;
+    color: #666;
+    margin: 2px 0 0;
+  }
+
+  .invoice-meta {
+    text-align: end;
+  }
+
+  .invoice-id-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin: 0;
+  }
+
+  .invoice-id-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 2px 0 0;
+  }
+
+  .invoice-date {
+    font-size: 12px;
+    color: #666;
+    margin: 4px 0 0;
+  }
+
+  .invoice-divider {
+    border-top: 2px solid #d4af37;
+    margin-bottom: 6mm;
+  }
+
+  .invoice-section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin: 0 0 4px;
+  }
+
+  .invoice-customer {
+    margin-bottom: 6mm;
+  }
+
+  .invoice-customer-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  .invoice-customer-phone {
+    font-size: 12px;
+    color: #666;
+    margin: 4px 0 0;
+  }
+
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6mm;
+  }
+
+  .invoice-table thead th {
+    background: #f5f5f0;
+    border-bottom: 2px solid #d4af37;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .invoice-table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    color: #333;
+  }
+
+  .invoice-table tbody tr:nth-child(even) td {
+    background: #fafafa;
+  }
+
+  .invoice-totals {
+    margin-inline-start: auto;
+    width: 280px;
+    margin-bottom: 8mm;
+  }
+
+  .invoice-total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .invoice-grand-total {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid #d4af37;
+    margin-top: 6px;
+    padding-top: 10px;
+    font-family: 'Cinzel', 'Noto Naskh Arabic', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .invoice-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10mm;
+    border-top: 1px solid #eee;
+    padding-top: 6mm;
+  }
+
+  .invoice-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .invoice-qr-img {
+    height: 120px;
+    width: 120px;
+  }
+
+  .invoice-qr-label {
+    font-size: 10px;
+    color: #999;
+    margin: 0;
+  }
+
+  .invoice-thanks {
+    font-family: 'Cinzel', 'Noto Naskh Arabic', serif;
+    font-size: 14px;
+    color: #d4af37;
+    margin: 0;
+  }
+}

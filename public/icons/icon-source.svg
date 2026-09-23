@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.3" stop-color="#aeb4b9"/>
+      <stop offset="0.52" stop-color="#f7f8f8"/>
+      <stop offset="0.76" stop-color="#7d858b"/>
+      <stop offset="1" stop-color="#e8ebed"/>
+    </linearGradient>
+    <filter id="soft-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" fill="#000000"/>
+  <g fill="none" stroke="url(#silver)" stroke-linecap="round" stroke-linejoin="round" filter="url(#soft-glow)">
+    <path d="M118 164L153 108H359L394 164" stroke-width="14"/>
+    <path d="M108 180H404L270 352V242H242V352L108 180Z" stroke-width="14"/>
+    <path d="M238 239H193M274 239H319M193 239L238 284V239M319 239L274 284V239" stroke-width="14"/>
+  </g>
+  <text x="256" y="412" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="34" letter-spacing="3" fill="#f4f5f6">GLOW GALLERY</text>
+  <text x="256" y="445" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" letter-spacing="11" fill="#aeb4b9">JEWELLERY</text>
+</svg>
