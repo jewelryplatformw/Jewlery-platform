@@ -21,7 +21,7 @@ import MetalStock from '@/components/MetalStock';
 import Scanner from '@/components/Scanner';
 import InvoiceGenerator from '@/components/InvoiceGenerator';
 import Login from '@/components/Login';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseConfigured } from '@/lib/supabase';
 import type { JewelryItem, MetalStock as MetalStockType, Transaction } from '@/lib/types';
 import { LangContext, translations, type Lang } from '@/lib/i18n';
 
@@ -137,6 +137,23 @@ function App() {
   };
 
   const activeItem = useMemo(() => NAV.find((n) => n.id === active) ?? NAV[0], [active]);
+
+  if (!supabaseConfigured) {
+    return (
+      <div className="min-h-screen bg-[#0d0d0e] flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md text-center">
+          <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-2xl border border-rose-500/30 bg-rose-500/10">
+            <ShieldCheck className="h-8 w-8 text-rose-400" />
+          </div>
+          <h1 className="font-display text-xl text-white mb-3">Configuration missing</h1>
+          <p className="text-sm text-white/50">
+            The app can't reach its database because required environment variables are not set.
+            Please verify the deployment configuration and reload.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!authReady) {
     return (
