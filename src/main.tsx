@@ -12,10 +12,5 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>
 );
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {
-      // Service worker registration failed — app still works online
-    });
-  });
-}
+// Service worker disabled — it caches stale JS bundles after Vercel deploys
+// and causes a blank screen. Re-enable only with a cache-busting strategy.
